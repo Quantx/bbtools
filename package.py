@@ -21,7 +21,7 @@ SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 IS_WINDOWS = os.name == 'nt'
 
-DESIRED_GODOT = "4.4.1"
+DESIRED_GODOT = "4.5.1"
 
 GODOT_GITHUB_LINUX = {
     "x86": "linux.x86_32",

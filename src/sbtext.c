@@ -157,7 +157,7 @@ int main(int argc, char ** argv) {
         // Both are missing, skip this
         if (!en_present && !jp_present) continue;
         
-        fprintf(outf, "%04d,", i);
+        fprintf(outf, "loc:%04d,", i);
         
         if (jp_present) {
             fseek(rdatf, string_pointers[i].jp - hdr_data.vaddr, SEEK_SET);
