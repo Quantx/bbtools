@@ -178,8 +178,8 @@ int convertXRAW(char * path) {
     
     header.format.flags = 0x40; // RGB
     header.format.rgbBitCount = 24;
-    header.format.rBitMask = 0xFF;
-    header.format.gBitMask = 0xFF00;
+    header.format.rBitMask = 0x0000FF;
+    header.format.gBitMask = 0x00FF00;
     header.format.bBitMask = 0xFF0000;
     
     fputs("DDS ", dds);

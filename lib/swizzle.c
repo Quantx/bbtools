@@ -58,9 +58,9 @@ void generate_swizzle_masks(unsigned int width,
     bool done;
     do {
         done = true;
-        if (bit < width) { x |= mask_bit; mask_bit <<= 1; done = false; }
+        if (bit < width)  { x |= mask_bit; mask_bit <<= 1; done = false; }
         if (bit < height) { y |= mask_bit; mask_bit <<= 1; done = false; }
-        if (bit < depth) { z |= mask_bit; mask_bit <<= 1; done = false; }
+        if (bit < depth)  { z |= mask_bit; mask_bit <<= 1; done = false; }
         bit <<= 1;
     } while(!done);
     assert((x ^ y ^ z) == (mask_bit - 1)); /* masks are mutually exclusive */

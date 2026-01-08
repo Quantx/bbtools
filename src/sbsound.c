@@ -117,7 +117,7 @@ struct xadpcm_wav_header {
     uint16_t nibblesPerBlock; // Always 64
 } __attribute__((packed));
 
-struct smpl_header {
+struct smpl_header { // 36
     uint32_t manufacturer;
     uint32_t product;
     uint32_t sample_period;
@@ -135,7 +135,7 @@ enum  {
     SMPL_LOOP_TYPE_BACKWARD = 2,
 };
 
-struct smpl_loop {
+struct smpl_loop { // 24
     uint32_t id;
     uint32_t type;
     uint32_t start;
@@ -196,7 +196,7 @@ int get_xwb_track_count(char * basepath, char * xwb_name) {
 }
 
 int write_wav_header(FILE * fd, struct wav_header * header, uint32_t data_size, uint32_t loop_count) {
-    uint32_t header_size = sizeof(struct wav_header);
+    uint32_t header_size = sizeof(struct wav_header); // 18
     if (header->format == 1) header_size -= sizeof(uint16_t);
     else header_size += header->extraSize;
     
