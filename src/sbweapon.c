@@ -52,8 +52,7 @@ struct __attribute__((__packed__)) mech_model_config {
 
 struct __attribute__((__packed__)) weapon_model_config {
     struct model_config cfg;
-    uint16_t zero;
-    uint16_t flags;
+    uint32_t flags;
 };
 
 struct __attribute__((__packed__)) weapon_data {
@@ -148,9 +147,9 @@ int main(int argc, char ** argv) {
         printf("Usage: %s wepdat.wcb\n", progname);
         return 1;
     }
-    
+
     char * path = *argv++; argc--;
-    
+
     FILE * wdat = fopen(path, "rb");
     if (!wdat) {
         fprintf(stderr, "Failed to open %s\n", path);
@@ -161,25 +160,25 @@ int main(int argc, char ** argv) {
     char * sep = strrchr(out_path, SEPARATOR);
     if (sep) strcpy(sep + 1, "weapondata.json");
     else strcpy(out_path, "weapondata.json");
-    
+
     FILE * outf = fopen(out_path, "w");
     if (!outf) {
         fprintf(stderr, "failed to open output file: %s\n", out_path);
         return 1;
     }
-    
+
     if (sep) strcpy(sep + 1, ".data.hdr");
     else strcpy(out_path, ".data.hdr");
-    
+
     FILE * hdrf = fopen(out_path, "rb");
     if (!hdrf) {
         fprintf(stderr, "Failed to open file: %s\n", out_path);
         return 1;
     }
-    
+
     struct section_header hdr_data;
     fread(&hdr_data, sizeof(struct section_header), 1, hdrf);
-    
+
     fclose(hdrf);
 
     if (sep) strcpy(sep + 1, ".rdata.hdr");
@@ -190,33 +189,33 @@ int main(int argc, char ** argv) {
         fprintf(stderr, "Failed to open file: %s\n", out_path);
         return 1;
     }
-    
+
     struct section_header hdr_rdata;
     fread(&hdr_rdata, sizeof(struct section_header), 1, hdrf);
-    
+
     fclose(hdrf);
-    
+
     if (sep) strcpy(sep + 1, ".data.seg");
     else strcpy(out_path, ".data.seg");
-    
+
     FILE * datf = fopen(out_path, "rb");
     if (!datf) {
         fprintf(stderr, "Failed to open file: %s\n", out_path);
         return 1;
     }
-    
+
     if (sep) strcpy(sep + 1, ".rdata.seg");
     else strcpy(out_path, ".rdata.seg");
-    
+
     FILE * rdatf = fopen(out_path, "rb");
     if (!rdatf) {
         fprintf(stderr, "Failed to open file: %s\n", out_path);
         return 1;
     }
-    
+
     uint32_t file_count;
     fread(&file_count, sizeof(uint32_t), 1, wdat);
-    
+
     uint32_t file_sizes[file_count];
     fread(file_sizes, sizeof(uint32_t), file_count, wdat);
 
@@ -228,26 +227,26 @@ int main(int argc, char ** argv) {
 
     fseek(datf, 0x58998, SEEK_SET);
     fread(swep_data_ptrs, sizeof(uint32_t), SWEP_DATA_LEN, datf);
-    
+
     fseek(datf, 0x58AE0, SEEK_SET);
     fread(mwep_name_ptrs, sizeof(uint32_t), MWEP_NAME_LEN, datf);
 
     fseek(datf, 0x58B48, SEEK_SET);
     fread(swep_name_ptrs, sizeof(uint32_t), SWEP_NAME_LEN, datf);
-    
+
     jwOpen(json_buffer, sizeof(json_buffer), JW_OBJECT, JW_PRETTY);
-    
+
     uint32_t weapon_type_count;
     fread(&weapon_type_count, sizeof(uint32_t), 1, wdat);
-    
+
     if (weapon_type_count != WEP_CLASS_COUNT) {
         fprintf(stderr, "Weapon type count %u instead of %u\n", weapon_type_count, WEP_CLASS_COUNT);
         return 1;
     }
-    
+
     uint32_t weapon_type_sizes[weapon_type_count];
     fread(weapon_type_sizes, sizeof(uint32_t), weapon_type_count, wdat);
-    
+
     for (int we = 0; we < weapon_type_count; we++) {
         uint32_t weapon_count;
         fread(&weapon_count, sizeof(uint32_t), 1, wdat);
@@ -257,12 +256,12 @@ int main(int argc, char ** argv) {
         fread(weapon_lookup_ptrs, sizeof(uint32_t), weapon_count, datf);
 
         jwObj_array(wep_classes[we]);
-    
+
         int weapons_processed = 0;
         for (int i = 0; i < weapon_count; i++) {
             struct weapon_data wep;
             fread(&wep, sizeof(struct weapon_data), 1, wdat);
-            
+
             if (wep.id != i) {
                 fprintf(stderr, "Weapon ID does not match! Got %d expected %d\n", wep.id, i);
                 return 1;
@@ -270,41 +269,41 @@ int main(int argc, char ** argv) {
 
             uint32_t bullet_offset = 0;
             uint32_t weapon_offset = 0;
-            
+
             if (weapon_lookup_ptrs[i] >= hdr_data.vaddr && weapon_lookup_ptrs[i] < hdr_data.vaddr + hdr_data.vsize) {
                 fseek(datf, weapon_lookup_ptrs[i] - hdr_data.vaddr, SEEK_SET);
                 fread(&bullet_offset, sizeof(uint32_t), 1, datf);
                 fread(&weapon_offset, sizeof(uint32_t), 1, datf);
             }
-            
+
             uint32_t * wep_data_ptrs = we ? swep_data_ptrs : mwep_data_ptrs;
-            
+
             struct weapon_model_config wep_model_cfg;
             fseek(datf, wep_data_ptrs[weapon_offset] - hdr_data.vaddr, SEEK_SET);
             fread(&wep_model_cfg, sizeof(struct weapon_model_config), 1, datf);
-            
+
             int16_t bullet_model;
             fseek(datf, tama_data_ptrs[bullet_offset] - hdr_data.vaddr, SEEK_SET);
             fread(&bullet_model, sizeof(int16_t), 1, datf);
-            
+
             uint32_t * wep_name_ptrs = we ? swep_name_ptrs : mwep_name_ptrs;
-            
+
             char name[16];
             fseek(rdatf, wep_name_ptrs[i] - hdr_rdata.vaddr, SEEK_SET);
             fread(name, sizeof(char), 16, rdatf);
-            
-            printf("WE %d | ID %02d: Weapon %04d, Bullet %04d, Flags: %04X, Name: \"%s\"\n", we, i, weapon_offset, bullet_offset, wep_model_cfg.flags, name);
-            
+
+            printf("WE %d | ID %02d: Weapon %04d, Bullet %04d, Flags: %08X, Name: \"%s\"\n", we, i, weapon_offset, bullet_offset, wep_model_cfg.flags, name);
+
             if (wep.unknown0 || wep.unknown1) {
                 fprintf(stderr, "WEP unknown was non zero, id: %d\n", wep.id);
                 return 1;
             }
-            
+
             jwArr_object();
-            
+
             jwObj_int("id", wep.id);
             jwObj_string("name", name);
-            jwObj_int("life", wep.life);            
+            jwObj_int("life", wep.life);
             jwObj_double("initial_velocity", wep.initial_velocity);
             jwObj_double("boost_max", wep.boost_max);
             jwObj_double("boost_rate", wep.boost_rate);
@@ -339,63 +338,63 @@ int main(int argc, char ** argv) {
             jwObj_int("flying_effect", wep.flying_effect);
             jwObj_int("horizontal_muzzle_count", wep.horizontal_muzzle_count);
             jwObj_int("vertical_muzzle_count", wep.vertical_muzzle_count);
-            
+
             jwObj_int("bullet_model", bullet_model);
             jwObj_int("weapon_model", wep_model_cfg.cfg.model);
             jwObj_int("weapon_motion", wep_model_cfg.cfg.motion);
             jwObj_int("weapon_hitbox", wep_model_cfg.cfg.hitbox);
             jwObj_int("weapon_lsq", wep_model_cfg.cfg.lsq);
 
-            jwObj_bool("shoulder", wep_model_cfg.flags & 0x0001); // Shoulder weapon or SWEP BOX weapon
-            jwObj_bool("shield",   wep_model_cfg.flags & 0x0004);
-            jwObj_bool("melee",    wep_model_cfg.flags & 0x0008);
-            jwObj_bool("mounted",  wep_model_cfg.flags & 0x0800); // Whether or not this contributes to "MOUNT OVER"
-            jwObj_bool("fixed",    wep_model_cfg.flags & 0x1000); // Whether or not this weapon can be unequipped
-            
+            jwObj_bool("shoulder", wep_model_cfg.flags & 0x00010000); // Shoulder weapon or SWEP BOX weapon
+            jwObj_bool("shield",   wep_model_cfg.flags & 0x00040000);
+            jwObj_bool("melee",    wep_model_cfg.flags & 0x00080000);
+            jwObj_bool("mounted",  wep_model_cfg.flags & 0x08000000); // Whether or not this contributes to "MOUNT OVER"
+            jwObj_bool("fixed",    wep_model_cfg.flags & 0x10000000); // Whether or not this weapon can be unequipped
+
             jwEnd();
-            
+
             weapons_processed++;
         }
-        
+
         printf("Weapon entry %d: Processed %d weapons\n", we, weapons_processed);
-        
+
         jwEnd();
     }
-    
+
     int jw_err = jwClose();
     if (jw_err) {
         fprintf(stderr, "JSON writer error: %s\n", jwErrorToString(jw_err));
         fclose(outf);
         return 1;
     }
-    
+
     fwrite(json_buffer, sizeof(char), strlen(json_buffer), outf);
     fclose(outf);
-    
+
     if (sep) strcpy(sep + 1, "trail_data.json");
     else strcpy(out_path, "trail_data.json");
-    
+
     outf = fopen(out_path, "w");
     if (!outf) {
         fprintf(stderr, "failed to open output file: %s\n", out_path);
         return 1;
     }
-    
+
     jwOpen(json_buffer, sizeof(json_buffer), JW_OBJECT, JW_PRETTY);
-    
+
     uint32_t smoke_type_count;
     fread(&smoke_type_count, sizeof(uint32_t), 1, wdat);
-    
+
     uint32_t smoke_type_sizes[smoke_type_count];
     fread(smoke_type_sizes, sizeof(uint32_t), smoke_type_count, wdat);
-    
+
     jwObj_array("smoke");
     for (uint32_t sm = 0; sm < 20; sm++) {
         struct smoke_data smk;
         fread(&smk, sizeof(struct smoke_data), 1, wdat);
-        
+
         if (!smk.print_max) continue; // Skip empty entries
-        
+
         jwArr_object();
         jwObj_array("color_start");
             jwArr_int(smk.color_start_r);
@@ -403,19 +402,19 @@ int main(int argc, char ** argv) {
             jwArr_int(smk.color_start_b);
             jwArr_int(smk.color_start_a);
         jwEnd();
-        
+
         jwObj_array("color_max");
             jwArr_int(smk.color_max_r);
             jwArr_int(smk.color_max_g);
             jwArr_int(smk.color_max_b);
             jwArr_int(smk.color_max_a);
         jwEnd();
-        
+
         jwObj_int("print_max", smk.print_max);
         jwObj_double("start_size", smk.start_size);
         jwObj_double("end_size", smk.end_size);
         jwObj_int("flags", smk.flags);
-        
+
         for (int i = 0; i < 8; i++) {
             if (smk.padding[i]) {
                 fprintf(stderr, "PADDING AT %d:%d WAS NON ZERO: %08X\n", sm, i, smk.padding[i]);
@@ -425,14 +424,14 @@ int main(int argc, char ** argv) {
         jwEnd();
     }
     jwEnd();
-    
+
     jwObj_array("tracer");
     for (uint32_t tr = 0; tr < 20; tr++) {
         struct tracer_data tracer;
         fread(&tracer, sizeof(struct tracer_data), 1, wdat);
-        
+
         if (!tracer.print_max) continue; // Skip empty entries
-        
+
         jwArr_object();
         jwObj_array("color_start");
             jwArr_int(tracer.color_start_r);
@@ -440,10 +439,10 @@ int main(int argc, char ** argv) {
             jwArr_int(tracer.color_start_b);
             jwArr_int(tracer.color_start_a);
         jwEnd();
-        
+
         jwObj_int("print_max", tracer.print_max);
         jwObj_double("start_size", tracer.start_size);
-        
+
         for (int i = 0; i < 8; i++) {
             if (tracer.padding[i]) {
                 fprintf(stderr, "PADDING AT %d:%d WAS NON ZERO: %08X\n", tr, i, tracer.padding[i]);
@@ -452,7 +451,7 @@ int main(int argc, char ** argv) {
         }
         jwEnd();
     }
-    
+
     // Manually add the last entry
     jwArr_object();
       jwObj_array("color_start");
@@ -461,26 +460,26 @@ int main(int argc, char ** argv) {
           jwArr_int(0x80);
           jwArr_int(0xFF);
       jwEnd();
-      
+
       jwObj_int("print_max", 4);
       jwObj_double("start_size", 35.0);
     jwEnd();
-    
+
     jwEnd();
-    
+
     fclose(wdat);
     fclose(datf);
     fclose(rdatf);
-    
+
     jw_err = jwClose();
     if (jw_err) {
         fprintf(stderr, "JSON writer error: %s\n", jwErrorToString(jw_err));
         fclose(outf);
         return 1;
     }
-    
+
     fwrite(json_buffer, sizeof(char), strlen(json_buffer), outf);
     fclose(outf);
-    
+
     return 0;
 }

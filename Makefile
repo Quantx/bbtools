@@ -10,7 +10,7 @@ TARGETS=binarize segment sbbump sbcockpit sbeffect sbengine sbhitbox sbmodel \
 	sbmotion sbshader sbsound sbstage sbterrain sbtext sbtexture sbweapon \
 	sblsq
 
-CFLAGS=-static -g -lm -I$(IDIR)
+CFLAGS=-g -lm -I$(IDIR)
 
 .PHONY: all linux win clean
 all: linux win

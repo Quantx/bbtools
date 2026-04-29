@@ -68,41 +68,41 @@ int unpackEFF(FILE * lsq) {
         uint16_t zero0;
     
         uint16_t effect_id;
-        fread(&effect_id, sizeof(uint16_t), 1, lsq);
+        fread(&effect_id, sizeof(uint16_t), 1, lsq); // 2
         
-        fread(&zero0, sizeof(uint16_t), 1, lsq);
+        fread(&zero0, sizeof(uint16_t), 1, lsq); // 4
         if (zero0) {
             fprintf(stderr, "zero0 was non-zero (0): %04X\n", zero0);
             return 1;
         }
         
         uint8_t jnt_idx_a, jnt_idx_b;
-        fread(&jnt_idx_a, sizeof(uint8_t), 1, lsq);
-        fread(&jnt_idx_b, sizeof(uint8_t), 1, lsq);
+        fread(&jnt_idx_a, sizeof(uint8_t), 1, lsq); // 5
+        fread(&jnt_idx_b, sizeof(uint8_t), 1, lsq); // 6
         
-        fread(&zero0, sizeof(uint16_t), 1, lsq);
+        fread(&zero0, sizeof(uint16_t), 1, lsq); // 8
         if (zero0) {
             fprintf(stderr, "zero0 was non-zero (1): %04X\n", zero0);
             return 1;
         }
         
         uint32_t flags;
-        fread(&flags, sizeof(uint32_t), 1, lsq);
+        fread(&flags, sizeof(uint32_t), 1, lsq); // 12
         
         uint32_t zero1;
-        fread(&zero1, sizeof(float), 1, lsq);
+        fread(&zero1, sizeof(uint32_t), 1, lsq); // 16
         if (zero1) {
             fprintf(stderr, "zero1 was non-zero: %08X\n", zero1);
             return 1;
         }
         
         uint32_t jnt_delay;
-        fread(&jnt_delay, sizeof(uint32_t), 1, lsq);
+        fread(&jnt_delay, sizeof(uint32_t), 1, lsq); // 20
         
         struct vector3 pos, rot, t_rot;
-        fread(&pos, sizeof(struct vector3), 1, lsq);
-        fread(&rot, sizeof(struct vector3), 1, lsq);
-        fread(&t_rot, sizeof(struct vector3), 1, lsq);
+        fread(&pos, sizeof(struct vector3), 1, lsq); // 32
+        fread(&rot, sizeof(struct vector3), 1, lsq); // 44
+        fread(&t_rot, sizeof(struct vector3), 1, lsq); // 56
         
         pos.x /= scale_factor;
         pos.y /= scale_factor;
