@@ -1,9 +1,0 @@
-[gd_scene format=3 uid="uid://baw6ipn5w5yet"]
-
-[ext_resource type="Script" uid="uid://bx6xljhrncjrs" path="res://addons/bbtools/os/boot/player.gd" id="1_582el"]
-[ext_resource type="Resource" uid="uid://criv41f2ak7yi" path="res://proprietary/loc/os/boot/gen3/Ignition_0.boot_anim" id="2_xgi81"]
-
-[node name="Test" type="Node2D" unique_id=1833153164]
-script = ExtResource("1_582el")
-boot = ExtResource("2_xgi81")
-metadata/_custom_type_script = "uid://bx6xljhrncjrs"
