@@ -12,10 +12,3 @@ bin/windows/*
 
 # Ignore generated archives
 **/*.tgz
-
-# Ignore proprietary files
-/godot/proprietary/
-
-# Godot 4+ specific ignores
-/godot/.godot/
-/godot/android/
