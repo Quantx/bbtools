@@ -1,0 +1,31 @@
+[gd_resource type="AnimationNodeStateMachine" format=3 uid="uid://blnj1145kxdv7"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x5qny"]
+animation = &"Anim_0"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_rq0y1"]
+animation = &"Anim_0"
+use_custom_timeline = true
+timeline_length = 0.0
+stretch_time_scale = false
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_fnt28"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_s2t6h"]
+advance_mode = 2
+advance_expression = "ejecting"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_x5qny"]
+advance_mode = 2
+advance_expression = "!ejecting"
+
+[resource]
+states/Eject/node = SubResource("AnimationNodeAnimation_x5qny")
+states/Eject/position = Vector2(658, 100)
+states/Setup/node = SubResource("AnimationNodeAnimation_rq0y1")
+states/Setup/position = Vector2(405, 100)
+transitions = ["Start", "Setup", SubResource("AnimationNodeStateMachineTransition_fnt28"), "Setup", "Eject", SubResource("AnimationNodeStateMachineTransition_s2t6h"), "Eject", "Setup", SubResource("AnimationNodeStateMachineTransition_x5qny")]
+graph_offset = Vector2(-523, -39)

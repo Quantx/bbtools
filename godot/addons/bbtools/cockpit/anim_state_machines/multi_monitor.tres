@@ -1,0 +1,53 @@
+[gd_resource type="AnimationNodeStateMachine" format=3 uid="uid://cq41fm3jrxid2"]
+
+[ext_resource type="AnimationNodeStateMachine" uid="uid://xy7np88mpwds" path="res://addons/bbtools/cockpit/anim_state_machines/startup.tres" id="1_gy115"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_si665"]
+animation = &"Anim_3"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_gy115"]
+animation = &"Anim_3"
+use_custom_timeline = true
+timeline_length = 0.0
+stretch_time_scale = false
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3wxgn"]
+animation = &"Anim_3"
+play_mode = 1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lsry7"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1q5oj"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "!monitor_multi_closed"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_si665"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "monitor_multi_closed"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_oak3r"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gy115"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "monitor_multi_closed"
+
+[resource]
+states/Close/node = SubResource("AnimationNodeAnimation_si665")
+states/Close/position = Vector2(698, 100)
+states/End/position = Vector2(1059, 100)
+states/Fixup/node = SubResource("AnimationNodeAnimation_gy115")
+states/Fixup/position = Vector2(556, 100)
+states/Open/node = SubResource("AnimationNodeAnimation_3wxgn")
+states/Open/position = Vector2(887, 100)
+states/Startup/node = ExtResource("1_gy115")
+states/Startup/position = Vector2(383, 100)
+transitions = ["Start", "Startup", SubResource("AnimationNodeStateMachineTransition_lsry7"), "Close", "Open", SubResource("AnimationNodeStateMachineTransition_1q5oj"), "Open", "Close", SubResource("AnimationNodeStateMachineTransition_si665"), "Startup", "Fixup", SubResource("AnimationNodeStateMachineTransition_oak3r"), "Fixup", "Close", SubResource("AnimationNodeStateMachineTransition_gy115")]
+graph_offset = Vector2(-907, -20)

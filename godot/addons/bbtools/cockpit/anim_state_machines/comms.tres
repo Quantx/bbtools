@@ -1,0 +1,142 @@
+[gd_resource type="AnimationNodeStateMachine" format=3 uid="uid://bchboel17svcl"]
+
+[ext_resource type="AnimationNodeStateMachine" uid="uid://xy7np88mpwds" path="res://addons/bbtools/cockpit/anim_state_machines/startup.tres" id="1_w5xfa"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_w5xfa"]
+animation = &"Anim_4"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_c4wuw"]
+animation = &"Anim_6"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xhs5w"]
+animation = &"Anim_8"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tpf2c"]
+animation = &"Anim_10"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_imnal"]
+animation = &"Anim_12"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_j511j"]
+animation = &"Anim_2"
+use_custom_timeline = true
+timeline_length = 0.00999999999999999
+stretch_time_scale = true
+start_offset = 100.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ilc47"]
+animation = &"Anim_3"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_15ars"]
+animation = &"Anim_5"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_r2ft0"]
+animation = &"Anim_7"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lfjn7"]
+animation = &"Anim_9"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vcytf"]
+animation = &"Anim_11"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c4wuw"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0tslw"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "comms_index != 0"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8fxa8"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "comms_index != 1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rk8fg"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "comms_index != 2"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_xq3rp"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "comms_index != 3"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c0gn2"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "comms_index != 4"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cq6dc"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_83rdt"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5jphj"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sy2w3"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0yio8"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gh8fy"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_47rtq"]
+advance_mode = 2
+advance_expression = "comms_index == 0"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_clntx"]
+advance_mode = 2
+advance_expression = "comms_index == 1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_nmux8"]
+advance_mode = 2
+advance_expression = "comms_index == 2"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7gufr"]
+advance_mode = 2
+advance_expression = "comms_index == 3"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wge0f"]
+advance_mode = 2
+advance_expression = "comms_index == 4"
+
+[resource]
+"states/Close 0/node" = SubResource("AnimationNodeAnimation_w5xfa")
+"states/Close 0/position" = Vector2(720, -192)
+"states/Close 1/node" = SubResource("AnimationNodeAnimation_c4wuw")
+"states/Close 1/position" = Vector2(720, -16)
+"states/Close 2/node" = SubResource("AnimationNodeAnimation_xhs5w")
+"states/Close 2/position" = Vector2(720, 154)
+"states/Close 3/node" = SubResource("AnimationNodeAnimation_tpf2c")
+"states/Close 3/position" = Vector2(720, 319)
+"states/Close 4/node" = SubResource("AnimationNodeAnimation_imnal")
+"states/Close 4/position" = Vector2(720, 503)
+states/Dummy/node = SubResource("AnimationNodeAnimation_j511j")
+states/Dummy/position = Vector2(545, 102)
+states/End/position = Vector2(947, 102)
+"states/Open 0/node" = SubResource("AnimationNodeAnimation_ilc47")
+"states/Open 0/position" = Vector2(720, -274)
+"states/Open 1/node" = SubResource("AnimationNodeAnimation_15ars")
+"states/Open 1/position" = Vector2(720, -109)
+"states/Open 2/node" = SubResource("AnimationNodeAnimation_r2ft0")
+"states/Open 2/position" = Vector2(720, 61)
+"states/Open 3/node" = SubResource("AnimationNodeAnimation_lfjn7")
+"states/Open 3/position" = Vector2(720, 231)
+"states/Open 4/node" = SubResource("AnimationNodeAnimation_vcytf")
+"states/Open 4/position" = Vector2(720, 403)
+states/Startup/node = ExtResource("1_w5xfa")
+states/Startup/position = Vector2(372, 100)
+transitions = ["Start", "Startup", SubResource("AnimationNodeStateMachineTransition_c4wuw"), "Open 0", "Close 0", SubResource("AnimationNodeStateMachineTransition_0tslw"), "Open 1", "Close 1", SubResource("AnimationNodeStateMachineTransition_8fxa8"), "Open 2", "Close 2", SubResource("AnimationNodeStateMachineTransition_rk8fg"), "Open 3", "Close 3", SubResource("AnimationNodeStateMachineTransition_xq3rp"), "Open 4", "Close 4", SubResource("AnimationNodeStateMachineTransition_c0gn2"), "Startup", "Dummy", SubResource("AnimationNodeStateMachineTransition_cq6dc"), "Close 0", "Dummy", SubResource("AnimationNodeStateMachineTransition_83rdt"), "Close 1", "Dummy", SubResource("AnimationNodeStateMachineTransition_5jphj"), "Close 2", "Dummy", SubResource("AnimationNodeStateMachineTransition_sy2w3"), "Close 3", "Dummy", SubResource("AnimationNodeStateMachineTransition_0yio8"), "Close 4", "Dummy", SubResource("AnimationNodeStateMachineTransition_gh8fy"), "Dummy", "Open 0", SubResource("AnimationNodeStateMachineTransition_47rtq"), "Dummy", "Open 1", SubResource("AnimationNodeStateMachineTransition_clntx"), "Dummy", "Open 2", SubResource("AnimationNodeStateMachineTransition_nmux8"), "Dummy", "Open 3", SubResource("AnimationNodeStateMachineTransition_7gufr"), "Dummy", "Open 4", SubResource("AnimationNodeStateMachineTransition_wge0f")]
+graph_offset = Vector2(-488, -265)

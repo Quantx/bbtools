@@ -1,0 +1,202 @@
+[gd_scene format=3 uid="uid://kqbwgvb74hvj"]
+
+[ext_resource type="Script" uid="uid://d08iig2t0mwfi" path="res://tests/weapons/test.gd" id="1_q8xu2"]
+[ext_resource type="Shader" uid="uid://bfayvp6tdd45w" path="res://tests/effect/checkerboard.gdshader" id="1_rnf5i"]
+[ext_resource type="Script" uid="uid://b3sccyossfnf1" path="res://addons/bbtools/hitbox/hitbox.gd" id="2_q8xu2"]
+[ext_resource type="Script" uid="uid://cj583tb4ejv10" path="res://addons/bbtools/hitbox/collision_shape.gd" id="3_o85c0"]
+[ext_resource type="Script" uid="uid://cd6lsc3yxy65h" path="res://addons/bbtools/hitbox/quads_data.gd" id="4_012tx"]
+[ext_resource type="Script" uid="uid://d2vsy7r57af67" path="res://tests/effect/camera_axis.gd" id="5_ge700"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cxivy"]
+render_priority = 0
+shader = ExtResource("1_rnf5i")
+shader_parameter/size = 1000.0
+shader_parameter/color1 = Color(0.7, 0.7, 0.7, 1)
+shader_parameter/color2 = Color(0.4, 0.4, 0.4, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5pipg"]
+material = SubResource("ShaderMaterial_cxivy")
+size = Vector2(10000, 10000)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_qwmn2"]
+
+[sub_resource type="Resource" id="Resource_eqs6y"]
+script = ExtResource("4_012tx")
+layers = PackedByteArray(0)
+surfaces = PackedByteArray(3)
+metadata/_custom_type_script = "uid://cd6lsc3yxy65h"
+
+[node name="Test" type="Node3D" unique_id=1182521145]
+script = ExtResource("1_q8xu2")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=732138359]
+transform = Transform3D(0.65245384, -0.15557542, 0.74168754, -0.329443, 0.82315695, 0.4624717, -0.68247443, -0.5460852, 0.48581862, 0, 0, 0)
+shadow_enabled = true
+directional_shadow_split_1 = 0.2
+directional_shadow_split_2 = 0.4
+directional_shadow_split_3 = 0.8
+directional_shadow_max_distance = 200.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=925329772]
+mesh = SubResource("PlaneMesh_5pipg")
+
+[node name="SBHitbox" type="StaticBody3D" parent="MeshInstance3D" unique_id=2098427410]
+transform = Transform3D(10000, 0, 0, 0, 10000, 0, 0, 0, 10000, 0, 0, 0)
+script = ExtResource("2_q8xu2")
+metadata/_custom_type_script = "uid://b3sccyossfnf1"
+
+[node name="SBHitboxShape" type="CollisionShape3D" parent="MeshInstance3D/SBHitbox" unique_id=1038316387]
+shape = SubResource("HeightMapShape3D_qwmn2")
+script = ExtResource("3_o85c0")
+quads_data = SubResource("Resource_eqs6y")
+bone_name = null
+metadata/_custom_type_script = "uid://cj583tb4ejv10"
+
+[node name="CameraAxis" type="Node3D" parent="." unique_id=818692492]
+transform = Transform3D(1, 0, 0, 0, 0.9195131, 0.3930594, 0, -0.3930594, 0.9195131, 0, 10, 0)
+script = ExtResource("5_ge700")
+
+[node name="Camera3D" type="Camera3D" parent="CameraAxis" unique_id=1655886643]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
+current = true
+
+[node name="Projectile" type="Node3D" parent="." unique_id=326991295]
+
+[node name="TopLeft" type="VBoxContainer" parent="." unique_id=1980692413]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MechList" type="OptionButton" parent="TopLeft" unique_id=280224456]
+layout_mode = 2
+
+[node name="MechSwitch" type="Button" parent="TopLeft" unique_id=1624935736]
+layout_mode = 2
+text = "Switch Mech"
+
+[node name="MWepList" type="OptionButton" parent="TopLeft" unique_id=500225082]
+visible = false
+layout_mode = 2
+
+[node name="MWepSlot" type="SpinBox" parent="TopLeft" unique_id=91386901]
+visible = false
+layout_mode = 2
+max_value = 2.0
+rounded = true
+
+[node name="MWepSwitch" type="Button" parent="TopLeft" unique_id=1714952291]
+visible = false
+layout_mode = 2
+text = "Switch MWEP"
+
+[node name="MWepFire" type="Button" parent="TopLeft" unique_id=1375539986]
+visible = false
+layout_mode = 2
+text = "Fire MWEP"
+
+[node name="SWepList" type="OptionButton" parent="TopLeft" unique_id=129390710]
+visible = false
+layout_mode = 2
+
+[node name="SWepSlot" type="SpinBox" parent="TopLeft" unique_id=322518520]
+visible = false
+layout_mode = 2
+max_value = 2.0
+rounded = true
+
+[node name="SWepSwitch" type="Button" parent="TopLeft" unique_id=221297596]
+visible = false
+layout_mode = 2
+text = "Switch SWEP"
+
+[node name="SWepFire" type="Button" parent="TopLeft" unique_id=1517349653]
+visible = false
+layout_mode = 2
+text = "Fire SWEP"
+
+[node name="ProjectileFreeze" type="Button" parent="TopLeft" unique_id=1911098198]
+layout_mode = 2
+text = "Freeze"
+
+[node name="TopRight" type="VBoxContainer" parent="." unique_id=1030566021]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="Standing" type="CheckBox" parent="TopRight" unique_id=625368120]
+layout_mode = 2
+disabled = true
+text = "Standing"
+
+[node name="FullyDeployed" type="CheckBox" parent="TopRight" unique_id=2135261664]
+layout_mode = 2
+disabled = true
+text = "Fully Deployed"
+
+[node name="MovementText" type="LineEdit" parent="TopRight" unique_id=79453404]
+layout_mode = 2
+placeholder_text = "Move Node"
+
+[node name="MovementSwitch" type="Button" parent="TopRight" unique_id=2061909411]
+layout_mode = 2
+text = "Move Switch"
+
+[node name="SlideText" type="LineEdit" parent="TopRight" unique_id=2083602592]
+layout_mode = 2
+placeholder_text = "Slide Node"
+
+[node name="SlideSwitch" type="Button" parent="TopRight" unique_id=1233440445]
+layout_mode = 2
+text = "Slide Switch"
+
+[node name="FallText" type="LineEdit" parent="TopRight" unique_id=951070418]
+layout_mode = 2
+placeholder_text = "Fall Node"
+
+[node name="FallSwitch" type="Button" parent="TopRight" unique_id=152045373]
+layout_mode = 2
+text = "Fall Switch"
+
+[node name="Deployed" type="CheckBox" parent="TopRight" unique_id=270339553]
+layout_mode = 2
+text = "Deployed"
+
+[node name="Rising" type="CheckBox" parent="TopRight" unique_id=1920731629]
+layout_mode = 2
+text = "Rising"
+
+[node name="Hatch" type="CheckBox" parent="TopRight" unique_id=1586634819]
+layout_mode = 2
+text = "Hatch"
+
+[node name="DropLeftTank" type="Button" parent="TopRight" unique_id=1922940814]
+layout_mode = 2
+text = "Drop Left Tank"
+
+[node name="DropRightTank" type="Button" parent="TopRight" unique_id=428017032]
+layout_mode = 2
+text = "Drop Right Tank"
+
+[node name="DropArmor" type="Button" parent="TopRight" unique_id=1113604117]
+layout_mode = 2
+text = "Drop Armor"
+
+[connection signal="pressed" from="TopLeft/MechSwitch" to="." method="_on_mech_switch_pressed"]
+[connection signal="pressed" from="TopLeft/MWepSwitch" to="." method="_on_mwep_switch_pressed"]
+[connection signal="pressed" from="TopLeft/MWepFire" to="." method="_on_mwep_fire_pressed"]
+[connection signal="pressed" from="TopLeft/SWepSwitch" to="." method="_on_swep_switch_pressed"]
+[connection signal="pressed" from="TopLeft/SWepFire" to="." method="_on_swep_fire_pressed"]
+[connection signal="pressed" from="TopLeft/ProjectileFreeze" to="." method="_on_projectile_freeze_pressed"]
+[connection signal="pressed" from="TopRight/MovementSwitch" to="." method="_on_movement_switch_pressed"]
+[connection signal="pressed" from="TopRight/SlideSwitch" to="." method="_on_slide_switch_pressed"]
+[connection signal="pressed" from="TopRight/FallSwitch" to="." method="_on_fall_switch_pressed"]
+[connection signal="toggled" from="TopRight/Deployed" to="." method="_on_deployed_toggled"]
+[connection signal="toggled" from="TopRight/Rising" to="." method="_on_rising_toggled"]
+[connection signal="toggled" from="TopRight/Hatch" to="." method="_on_hatch_toggled"]
+[connection signal="pressed" from="TopRight/DropLeftTank" to="." method="_on_drop_left_tank_pressed"]
+[connection signal="pressed" from="TopRight/DropRightTank" to="." method="_on_drop_right_tank_pressed"]
+[connection signal="pressed" from="TopRight/DropArmor" to="." method="_on_drop_armor_pressed"]

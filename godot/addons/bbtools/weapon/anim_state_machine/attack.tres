@@ -1,0 +1,38 @@
+[gd_resource type="AnimationNodeStateMachine" format=3 uid="uid://cri8r1tuabo4k"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vwr3p"]
+animation = &"Anim_2"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_odaib"]
+animation = &"Anim_1"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jttbh"]
+animation = &"Anim_0"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_usbe0"]
+advance_mode = 2
+advance_expression = "firing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lldef"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_f2we6"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "!firing"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_df0y0"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "firing"
+
+[resource]
+states/AttackEnd/node = SubResource("AnimationNodeAnimation_vwr3p")
+states/AttackEnd/position = Vector2(520, 237)
+states/AttackIdle/node = SubResource("AnimationNodeAnimation_odaib")
+states/AttackIdle/position = Vector2(672, 100)
+states/AttackStart/node = SubResource("AnimationNodeAnimation_jttbh")
+states/AttackStart/position = Vector2(520, -42)
+transitions = ["Start", "AttackStart", SubResource("AnimationNodeStateMachineTransition_usbe0"), "AttackStart", "AttackIdle", SubResource("AnimationNodeStateMachineTransition_lldef"), "AttackIdle", "AttackEnd", SubResource("AnimationNodeStateMachineTransition_f2we6"), "AttackEnd", "AttackStart", SubResource("AnimationNodeStateMachineTransition_df0y0")]
+graph_offset = Vector2(-315, -87)

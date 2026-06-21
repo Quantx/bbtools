@@ -1,0 +1,44 @@
+[gd_resource type="AnimationNodeStateMachine" format=3 uid="uid://ci8cvjr5a1plw"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_pc8yq"]
+animation = &"Anim_0"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_38xy2"]
+animation = &"Anim_0"
+use_custom_timeline = true
+timeline_length = 0.0
+stretch_time_scale = false
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_kw3d3"]
+animation = &"Anim_0"
+play_mode = 1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2ftl5"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "!hatch_closed"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0s8f1"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "hatch_closed"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w11ct"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_101i5"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "hatch_closed"
+
+[resource]
+states/Close/node = SubResource("AnimationNodeAnimation_pc8yq")
+states/Close/position = Vector2(462, 100)
+states/Init/node = SubResource("AnimationNodeAnimation_38xy2")
+states/Init/position = Vector2(310, 100)
+states/Open/node = SubResource("AnimationNodeAnimation_kw3d3")
+states/Open/position = Vector2(667, 100)
+states/Start/position = Vector2(155, 100)
+transitions = ["Close", "Open", SubResource("AnimationNodeStateMachineTransition_2ftl5"), "Open", "Close", SubResource("AnimationNodeStateMachineTransition_0s8f1"), "Start", "Init", SubResource("AnimationNodeStateMachineTransition_w11ct"), "Init", "Close", SubResource("AnimationNodeStateMachineTransition_101i5")]

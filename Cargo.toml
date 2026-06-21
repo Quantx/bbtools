@@ -1,0 +1,22 @@
+[package]
+name = "bbtools"
+version = "0.6.0"
+authors = ["QuantX"]
+edition = "2024"
+
+[dependencies]
+bmfont_rs = "0.4.0"
+byteorder = "1.5.0"
+flate2 = "1.1.9"
+glam = "0.33.1"
+gltf = { version = "1.4.1", features = ["extensions"] }
+num-bigint = "0.4.6"
+pathdiff = "0.2.3"
+serde_json = "1.0.148"
+sha1 = "0.11.0"
+tar = "0.4.46"
+
+[build-dependencies]
+flate2 = "1.1.9"
+tar = "0.4.46"
+pathdiff = "0.2.3"

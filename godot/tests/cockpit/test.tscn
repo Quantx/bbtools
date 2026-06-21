@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://c36diq4kirmtl"]
+
+[ext_resource type="Script" uid="uid://c7ouhr2pkwx8p" path="res://tests/cockpit/test.gd" id="1_r8p57"]
+
+[node name="Test" type="Node3D" unique_id=1284463134]
+script = ExtResource("1_r8p57")
+
+[node name="DefaultCamera" type="Camera3D" parent="." unique_id=1516332257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1000, 0)
+current = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2022734295]
+z_index = 1
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MissionList" type="OptionButton" parent="VBoxContainer" unique_id=2088089669]
+layout_mode = 2
+
+[node name="MissionSwitch" type="Button" parent="VBoxContainer" unique_id=1740187778]
+layout_mode = 2
+text = "Switch Mission"
+
+[node name="CockpitList" type="OptionButton" parent="VBoxContainer" unique_id=1701668852]
+layout_mode = 2
+
+[node name="CockpitSwitch" type="Button" parent="VBoxContainer" unique_id=1123687086]
+layout_mode = 2
+text = "Switch Cockpit"
+
+[node name="Poses" type="SpinBox" parent="VBoxContainer" unique_id=437574796]
+visible = false
+layout_mode = 2
+prefix = "Pose"
+
+[node name="Eject" type="Button" parent="VBoxContainer" unique_id=1365366993]
+visible = false
+layout_mode = 2
+toggle_mode = true
+text = "Eject"
+
+[node name="MechViewport" type="SubViewport" parent="." unique_id=1094002085]
+handle_input_locally = false
+
+[node name="Camera" type="Camera3D" parent="MechViewport" unique_id=101985724]
+cull_mask = 1
+current = true
+
+[connection signal="pressed" from="VBoxContainer/MissionSwitch" to="." method="_on_mission_switch_pressed"]
+[connection signal="pressed" from="VBoxContainer/CockpitSwitch" to="." method="_on_cockpit_switch_pressed"]
+[connection signal="value_changed" from="VBoxContainer/Poses" to="." method="_on_poses_value_changed"]
+[connection signal="toggled" from="VBoxContainer/Eject" to="." method="_on_eject_toggled"]
