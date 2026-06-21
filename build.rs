@@ -7,11 +7,14 @@ use tar::Builder;
 
 // Example custom build script.
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("cargo::rerun-if-changed=godot/project.godot");
+    println!("cargo::rerun-if-changed=bin/");
+
     let target_os = env::var("CARGO_CFG_TARGET_OS").expect("CARGO_CFG_TARGET_OS not specified");
 
-    let is_debug = env::var("PROFILE").unwrap_or_default() == "debug";
+    let profile = env::var("PROFILE").unwrap_or_default();
 
-    let tar_path = format!("internal_{}.tgz", target_os);
+    let tar_path = format!("internal_{}_{}.tgz", profile, target_os);
 
     {
         let src_to_tar_path = diff_paths(&tar_path, "src/").unwrap();
@@ -22,7 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Don't actually compress debug builds for faster build times
-    let compression = if is_debug {
+    let compression = if profile == "debug" {
         Compression::none()
     } else {
         Compression::best()
