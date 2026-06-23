@@ -7,8 +7,7 @@ target
 **/*.rs.bk
 
 # Ignore contents of bin directory
-bin/linux/*
-bin/windows/*
+bin/*
 
 # Ignore generated archives
 **/*.tgz

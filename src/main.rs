@@ -11,7 +11,17 @@ use xbe::XBE;
 use flate2::bufread::GzDecoder;
 use tar::Archive;
 
-const INTERNAL_TAR_BYTES: &[u8] = include_bytes!(env!("INTERNAL_TAR_PATH"));
+fn unpack_internal_tar() -> Result<(), Box<dyn std::error::Error>> {
+    println!("Unpacking internal tar...");
+
+    const INTERNAL_TAR_BYTES: &[u8] = include_bytes!(env!("INTERNAL_TAR_PATH"));
+
+    // Unpack the internal tar
+    let mut tar_internal = Archive::new(GzDecoder::new(INTERNAL_TAR_BYTES));
+    tar_internal.unpack("build/")?;
+
+    return Ok(());
+}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("BBTools version: {}", env!("CARGO_PKG_VERSION"));
@@ -23,6 +33,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let mut game_path = PathBuf::from(args[1].clone());
+
+    unpack_internal_tar()?;
+
+    if game_path.is_file() && game_path.extension().is_some_and(|ext| ext == "iso") {
+        // Extract the iso image and update the game path to point at default.xbe
+        titles::extract_iso(&mut game_path)?;
+    }
 
     // Append the executable file to the path if not present
     if game_path.is_dir() {
@@ -42,12 +59,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     game_path.pop(); // Adjust the path to point at the root directory containing the game
-
-    println!("Unpacking internal tar...");
-
-    // Unpack the internal tar
-    let mut tar_internal = Archive::new(GzDecoder::new(INTERNAL_TAR_BYTES));
-    tar_internal.unpack("build/")?;
 
     let godot_base_path = PathBuf::from("build/godot/");
 

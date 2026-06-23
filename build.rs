@@ -37,6 +37,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Add specific OS executables
     tar_builder.append_dir_all("bin", format!("bin/{}", target_os))?;
+    tar_builder.append_dir_all("bin", "bin/license")?;
 
     // Add godot root directory
     tar_builder.append_dir("godot/", "godot/")?;

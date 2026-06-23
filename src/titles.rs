@@ -7,6 +7,18 @@ use std::process::Command;
 use crate::bbtools::*;
 use xbe::XBE;
 
+pub fn extract_iso(extract_path: &mut PathBuf) -> Result<(), Box<dyn std::error::Error>> {
+    let iso_path = extract_path.clone();
+    extract_path.set_extension("");
+
+    let mut xiso_extract_cmd = Command::new("build/bin/extract-xiso");
+    xiso_extract_cmd.arg(iso_path).arg("-d").arg(&extract_path);
+    xiso_extract_cmd.status()?; // Extract file system
+
+    extract_path.push("default.xbe");
+    return Ok(());
+}
+
 pub fn unpack(
     xbe: &mut XBE,
     game_path: &mut PathBuf,
