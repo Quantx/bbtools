@@ -38,16 +38,16 @@ pub fn build(
     godot_base_path: &Path,
     as_zip: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let export_name = match xbe.title_id {
-        sb::TITLE_ID => sb::TITLE_NAME,
-        loc::TITLE_ID => loc::TITLE_NAME,
+    let title_prefix = match xbe.title_id {
+        sb::TITLE_ID => sb::TITLE_PREFIX,
+        loc::TITLE_ID => loc::TITLE_PREFIX,
         _ => return Err(format!("Unknown title ID {:08X}", xbe.title_id).into()),
     };
 
     let export_extension = if as_zip { "zip" } else { "pck" };
 
     let mut export_path = PathBuf::from("..");
-    export_path.push(export_name);
+    export_path.push(title_prefix);
     export_path.set_extension(export_extension);
 
     let mut godot_import_cmd = Command::new(godot_bin_path);
@@ -59,34 +59,13 @@ pub fn build(
 
     godot_import_cmd.status()?; // Import all assets (first pass)
 
-    // Force re-import of missions
-    let mut import_dir = godot_base_path.to_path_buf();
-    import_dir.push(".godot");
-    import_dir.push("imported");
-
-    let import_paths = std::fs::read_dir(&import_dir)?;
-    for dirent_opt in import_paths {
-        if dirent_opt.is_err() {
-            continue;
-        }
-        let dirent = dirent_opt.unwrap();
-
-        if dirent
-            .file_name()
-            .to_str()
-            .is_some_and(|file_name| file_name.contains(".mission_scene"))
-        {
-            std::fs::remove_file(dirent.path())?;
-        }
-    }
-
     let mut godot_export_cmd = Command::new(godot_bin_path);
     godot_export_cmd
         .arg("--headless")
         .arg("--path")
         .arg(godot_base_path)
         .arg("--export-pack")
-        .arg(export_name)
+        .arg(title_prefix)
         .arg(export_path);
 
     godot_export_cmd.status()?; // Export the project

@@ -759,15 +759,122 @@ impl GAD {
     }
 }
 
+#[derive(Default)]
+struct MissionText {
+    prefix: String,
+
+    title: u16,
+    attack_objective: Option<u16>,
+    defense_objective: Option<u16>,
+    symmetric_targets: bool,
+    attack_targets: Option<u16>,
+    defense_targets: Option<u16>,
+}
+
+impl MissionText {
+    fn new_loc(id: usize) -> Self {
+        let mut text = Self::default();
+        text.prefix = "loc".to_owned();
+        text.title = id as u16 + 1233;
+        match id {
+            3 => {
+                text.attack_objective = Some(1265);
+                text.defense_objective = Some(1266);
+            }
+            4 => {
+                text.symmetric_targets = true;
+                text.attack_targets = Some(1267);
+                text.defense_targets = Some(1268);
+            }
+            5 => {
+                text.attack_targets = Some(1269);
+                text.defense_targets = Some(1270);
+            }
+            6 => {
+                text.attack_objective = Some(1271);
+                text.defense_objective = Some(1272);
+            }
+            9 => {
+                text.attack_targets = Some(1273);
+                text.defense_targets = Some(1274);
+            }
+            10 => {
+                text.symmetric_targets = true;
+                text.attack_targets = Some(1276);
+                text.defense_targets = Some(1275);
+            }
+            15 => {
+                text.attack_objective = Some(1277);
+                text.defense_objective = Some(1278);
+            }
+            16 => {
+                text.attack_objective = Some(1279);
+                text.defense_objective = Some(1279);
+            }
+            17 => {
+                text.attack_objective = Some(1280);
+                text.defense_objective = Some(1280);
+            }
+            22 => {
+                text.attack_targets = Some(1281);
+                text.defense_targets = Some(1282);
+            }
+            23 => {
+                text.attack_targets = Some(1283);
+                text.defense_targets = Some(1284);
+            }
+            24 | 25 | 26 => {
+                text.attack_targets = Some(1285);
+                text.defense_targets = Some(1286);
+            }
+            _ => {}
+        }
+        return text;
+    }
+
+    fn new_sb(id: usize) -> Self {
+        let mut text = Self::default();
+        text.prefix = "sb".to_owned();
+        text.title = id as u16;
+        return text;
+    }
+
+    fn write_prefixed(
+        &self,
+        text: Option<u16>,
+        writer: &mut impl Write,
+    ) -> Result<(), std::io::Error> {
+        write_pascal_option_string(
+            text.and_then(|t| Some(format!("{}:{:04}", self.prefix, t)))
+                .as_deref(),
+            writer,
+        )
+    }
+
+    fn write(&self, writer: &mut impl Write) -> Result<(), std::io::Error> {
+        self.write_prefixed(Some(self.title), writer)?;
+        self.write_prefixed(self.attack_objective, writer)?;
+        self.write_prefixed(self.defense_objective, writer)?;
+        writer.write_u8(self.symmetric_targets as u8)?;
+        self.write_prefixed(self.attack_targets, writer)?;
+        self.write_prefixed(self.defense_targets, writer)?;
+
+        return Ok(());
+    }
+}
+
 pub struct Mission {
+    id: usize,
     offset: Vec3,
     scale: f32,
     pub ground: Option<GND>,
     pub stages: Vec<STG>,
+    text: MissionText,
 }
 
 impl Mission {
     pub fn import_loc(
+        id: usize,
         gad_path: &Path,
         gnd_path: &Path,
         stg_paths: [&Path; LOC_STG_COUNT],
@@ -836,14 +943,17 @@ impl Mission {
         }
 
         return Ok(Mission {
+            id,
             offset,
             scale,
             ground,
             stages,
+            text: MissionText::new_loc(id),
         });
     }
 
     pub fn import_sb(
+        id: usize,
         gad_path: &Path,
         height_path: &Path,
         texture_path: &Path,
@@ -870,10 +980,12 @@ impl Mission {
         )?;
 
         return Ok(Mission {
+            id,
             offset,
             scale,
             ground: Some(ground),
             stages: vec![stage],
+            text: MissionText::new_sb(id),
         });
     }
 
@@ -915,7 +1027,6 @@ impl Mission {
 
     pub fn export(
         &mut self,
-        id: usize,
         path: &Path,
         objects: &[OBJ],
         model_path_fn: FnIndexToPath,
@@ -925,13 +1036,15 @@ impl Mission {
 
         let fstg = &self.stages[0];
 
-        mission_path.push(format!("Mission_{:02}.mission_scene", id));
+        mission_path.push(format!("Mission_{:02}.mission_scene", self.id));
         {
             let file = File::create(&mission_path)?;
             let mut writer = BufWriter::new(file);
 
             writer.write_u32::<LittleEndian>(self.stages.len() as u32)?;
             writer.write_u8(fstg.draw_terrain as u8)?;
+
+            self.text.write(&mut writer)?;
 
             write_godot_path(&dds_paths[2], &mut writer)?; // Map Big DDS
             write_godot_path(&dds_paths[3], &mut writer)?; // Map Small DDS

@@ -52,7 +52,7 @@ use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use glam::f32::Vec3A as Vec3;
 use glam::{U8Vec4, UVec2, Vec2, Vec4Swizzles}; // Vec3A is 16-bytes so that it can function with SIMD
 
-pub const TITLE_NAME: &str = "LOC";
+pub const TITLE_PREFIX: &str = "loc";
 pub const TITLE_ID: u32 = 0x43430009;
 const GAME_FPS: f32 = 20.0;
 const GAME_SCALE: f32 = 0.01;
@@ -1735,6 +1735,7 @@ pub fn unpack(
             gnd_path.push(format!("map{:02}.gnd", mi));
             gad_path.push(format!("map{:02}hit.gad", cmp::min(mi, 24))); // Fix an issue where maps 25/26 need to use map 24's .gad
             let mut mission = Mission::import_loc(
+                mi,
                 &gad_path,
                 &gnd_path,
                 stg_paths.each_ref().map(|p| p.as_path()),
@@ -1761,7 +1762,6 @@ pub fn unpack(
                 ];
 
                 mission.export(
-                    mi,
                     &build_path,
                     &objects,
                     get_gltf_path,

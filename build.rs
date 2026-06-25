@@ -8,6 +8,8 @@ use tar::Builder;
 // Example custom build script.
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("cargo::rerun-if-changed=godot/project.godot");
+    println!("cargo::rerun-if-changed=godot/addons/");
+    println!("cargo::rerun-if-changed=godot/tests/");
     println!("cargo::rerun-if-changed=bin/");
 
     let target_os = env::var("CARGO_CFG_TARGET_OS").expect("CARGO_CFG_TARGET_OS not specified");

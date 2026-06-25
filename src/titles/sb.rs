@@ -17,7 +17,7 @@ use xbe::XBE;
 use xbo::XBO;
 use xpr::{XPR, XPRFormat};
 
-pub const TITLE_NAME: &str = "SB";
+pub const TITLE_PREFIX: &str = "sb";
 pub const TITLE_ID: u32 = 0x43430002;
 const GAME_FPS: f32 = 20.0;
 const GAME_SCALE: f32 = 2.0;
@@ -194,6 +194,7 @@ pub fn unpack(
         game_path.pop(); // Exit StgData
 
         let mut mission = Mission::import_sb(
+            mi,
             &gad_path,
             &height_path,
             &texture_path,
@@ -224,7 +225,6 @@ pub fn unpack(
         let ground_texture = ground_tiles_texture.path_to_dds(godot_base_path).unwrap();
         let empty_path = PathBuf::new();
         mission.export(
-            mi,
             &build_path,
             &objects,
             get_gltf_path,
