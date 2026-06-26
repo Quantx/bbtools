@@ -392,6 +392,8 @@ const MECH_CAMO_COUNT: usize = 4;
 const MECH_PAINT_AREA_COUNT: usize = 11;
 const MECH_PAINT_COLOR_COUNT: usize = MECH_CAMO_COUNT * MECH_PAINT_AREA_COUNT;
 pub struct Mech {
+    name_text: u16,
+    description_text: u16,
     modcfgs: [MechModelConfig; MECH_CAMO_COUNT],
     manipulator: ModelConfig,
     weapon_mount: ModelConfig,
@@ -466,6 +468,8 @@ impl Mech {
             };
 
             mechs.push(Mech {
+                name_text: id as u16 + 1399,
+                description_text: id as u16 + 688,
                 modcfgs: modcfgs,
                 manipulator: manipulator_models[part.manipulator as usize],
                 weapon_mount: weapon_mount_models[part.weapon_mount as usize],
@@ -569,6 +573,10 @@ impl Mech {
 
             // Mech ID
             writer.write_u8(self.data.id)?;
+
+            // Translation keys
+            write_pascal_string(&format!("loc:{:04}", self.name_text), &mut writer)?;
+            write_pascal_string(&format!("loc:{:04}", self.description_text), &mut writer)?;
 
             // Mech Info
             writer.write_u8(self.data.cockpit_type)?;

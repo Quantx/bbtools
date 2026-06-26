@@ -420,7 +420,9 @@ pub struct Weapon {
     wep_type: WeaponType,
     pub data: WeaponData,
     pub effects: WeaponEffects,
-    pub name: String,
+    display_name: String,
+    name_text: u16,
+    description_text: u16,
     pub weapon_modcfg: ModelConfigFlags,
     projectile_modcfg: ModelConfig,
     projectile_collider: ProjectileCollider,
@@ -542,6 +544,11 @@ impl Weapon {
                 }
             }
 
+            let (name_text, description_text) = match weapon_type {
+                WeaponType::MWEP => (id as u16 + 1449, id as u16 + 739),
+                WeaponType::SWEP | WeaponType::CWEP => (id as u16 + 1472, id as u16 + 762),
+            };
+
             weapons.push(Weapon {
                 wep_type: weapon_type.clone(),
                 data,
@@ -549,7 +556,9 @@ impl Weapon {
                 weapon_modcfg,
                 projectile_modcfg,
                 projectile_collider,
-                name: weapon_names[id].clone(),
+                display_name: weapon_names[id].clone(),
+                name_text,
+                description_text,
             });
         }
 
@@ -683,6 +692,10 @@ impl Weapon {
             writer.write_u8(self.data.id)?;
             writer.write_u8(self.wep_type as u8)?;
 
+            // Translation keys
+            write_pascal_string(&format!("loc:{:04}", self.name_text), &mut writer)?;
+            write_pascal_string(&format!("loc:{:04}", self.description_text), &mut writer)?;
+
             // Categories
             writer.write_u8(self.data.category)?;
             writer.write_u8(self.data.damage_type)?;
@@ -691,7 +704,7 @@ impl Weapon {
             //writer.write_u8(self.data.flying_effect)?; // Unused
 
             // Weapon Cockpit Name
-            write_pascal_string(&self.name, &mut writer)?;
+            write_pascal_string(&self.display_name, &mut writer)?;
 
             // Mech Data
             writer.write_f32::<LittleEndian>(self.data.torso_turn_rate)?;
