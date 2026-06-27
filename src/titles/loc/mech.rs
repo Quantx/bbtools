@@ -90,7 +90,7 @@ impl From<&[u8; ENGINE_DATA_SIZE]> for EngineData {
         let tank_capacity_sub = LittleEndian::read_f32(&buf[140..144]);
 
         // tank_consumption = &buf[144..148]
-        // battery_capacity = &buf[152..156]
+        // battery_capacity = &buf[148..152]
 
         let cockpit_type = LittleEndian::read_u32(&buf[156..160]);
         assert!((cockpit_type as usize) < MECH_GENERATIONS.len());
@@ -148,7 +148,7 @@ impl From<&[u8; ENGINE_DATA_SIZE]> for EngineData {
             } else {
                 10000.0
             },
-            resistance_front: LittleEndian::read_f32(&buf[148..152]),
+            resistance_front: LittleEndian::read_f32(&buf[152..156]),
             resistance_side: LittleEndian::read_f32(&buf[184..188]),
             resistance_rear: LittleEndian::read_f32(&buf[188..192]),
             cockpit_type: cockpit_type as u8,
