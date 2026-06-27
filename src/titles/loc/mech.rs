@@ -391,6 +391,10 @@ impl MechParts {
 const MECH_CAMO_COUNT: usize = 4;
 const MECH_PAINT_AREA_COUNT: usize = 11;
 const MECH_PAINT_COLOR_COUNT: usize = MECH_CAMO_COUNT * MECH_PAINT_AREA_COUNT;
+const MECH_FACTION_FLAGS: [u8; MECH_COUNT] = [
+    0x9, 0x9, 0x1, 0x1, 0x0, 0x2, 0x2, 0x2, 0x1, 0x1, 0x2, 0x2, 0x2, 0x1, 0x2, 0x2, 0x8, 0x8, 0x8,
+    0x1, 0x1, 0x1, 0x1, 0x4, 0x1, 0x4, 0x4, 0x4, 0x8, 0x4, 0x4, 0x2, 0x0, 0x0, 0x0,
+];
 pub struct Mech {
     name_text: u16,
     description_text: u16,
@@ -398,6 +402,7 @@ pub struct Mech {
     manipulator: ModelConfig,
     weapon_mount: ModelConfig,
     manufacturer: u8,
+    faction_flags: u8,
     collider_size: Vec3,
     collider_offset: Vec3,
     data: EngineData,
@@ -470,13 +475,14 @@ impl Mech {
             mechs.push(Mech {
                 name_text: id as u16 + 1399,
                 description_text: id as u16 + 688,
-                modcfgs: modcfgs,
+                modcfgs,
                 manipulator: manipulator_models[part.manipulator as usize],
                 weapon_mount: weapon_mount_models[part.weapon_mount as usize],
                 manufacturer: manufacturer as u8,
+                faction_flags: MECH_FACTION_FLAGS[id],
                 collider_size: part.collider_size,
                 collider_offset: part.collider_offset,
-                data: data,
+                data,
                 loadout: loadouts[id].clone(),
                 eye: eyes[id].expect("No eye effect for mech"),
                 paint_palettes: paint_palettes
@@ -582,6 +588,7 @@ impl Mech {
             writer.write_u8(self.data.cockpit_type)?;
             writer.write_u8(self.data.get_generation())?;
             writer.write_u8(self.manufacturer)?;
+            writer.write_u8(self.faction_flags)?;
             writer.write_u8(self.loadout.weight_type)?;
             writer.write_u8(self.loadout.class_type)?;
             writer.write_u8(self.loadout.profile_description)?;
