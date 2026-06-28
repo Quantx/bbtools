@@ -330,7 +330,7 @@ pub fn unpack(
     /*** Process Mech Data ***/
     game_path.push("Eng_data");
     game_path.push("eng_data.eng");
-    let mechs = Mech::import(xbe, &game_path, GAME_SCALE)?;
+    let mechs = Mech::import(xbe, &game_path, GAME_SCALE, GAME_FPS)?;
     game_path.pop();
     game_path.pop();
 

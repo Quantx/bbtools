@@ -162,7 +162,7 @@ impl From<&[u8; ENGINE_DATA_SIZE]> for EngineData {
 }
 
 impl EngineData {
-    pub fn import(path: &Path) -> Result<Vec<Self>, std::io::Error> {
+    pub fn import(path: &Path, fps: f32) -> Result<Vec<Self>, std::io::Error> {
         let file = File::open(path)?;
         let mut reader = BufReader::new(file);
 
@@ -186,7 +186,11 @@ impl EngineData {
             }
 
             reader.read(&mut file_buf)?;
-            engine_data_list.push(EngineData::from(&file_buf));
+
+            let mut engine_data = EngineData::from(&file_buf);
+            engine_data.turn_speed *= fps;
+
+            engine_data_list.push(engine_data);
         }
 
         return Ok(engine_data_list);
@@ -416,8 +420,9 @@ impl Mech {
         xbe: &mut XBE,
         engdat_path: &Path,
         scale: f32,
+        fps: f32,
     ) -> Result<Vec<Self>, std::io::Error> {
-        let engine_data = EngineData::import(engdat_path)?;
+        let engine_data = EngineData::import(engdat_path, fps)?;
 
         let mech_models = MechModelConfig::import_pointers(xbe, ".data", 0x581C0, MECH_COUNT)?;
 
