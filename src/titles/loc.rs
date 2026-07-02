@@ -1434,13 +1434,15 @@ pub fn unpack(
                 [(0x37310, 15), (0x376D0, 16), (0x37AD0, 15)];
 
             let mut boot_color_pointers: [u32; 8] = [0; _];
-            boot_color_pointers[0] = 0x256654;
 
             xbe.seek_section_offset(".text", 0x5FAF8)?;
             for ptr in boot_color_pointers.iter_mut().skip(1) {
                 *ptr = xbe.reader.read_u32::<LittleEndian>()?;
                 xbe.reader.seek_relative(1)?;
             }
+            // Manually compute the extra color pointer
+            boot_color_pointers[0] = boot_color_pointers[1];
+            boot_color_pointers[1] += 4;
 
             let spritesheet_path = get_ui_spritesheet_path(4);
 

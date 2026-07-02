@@ -478,7 +478,7 @@ impl Mech {
             };
 
             mechs.push(Mech {
-                name_text: id as u16 + 1399,
+                name_text: id as u16 + 641,
                 description_text: id as u16 + 688,
                 modcfgs,
                 manipulator: manipulator_models[part.manipulator as usize],
