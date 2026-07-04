@@ -317,12 +317,6 @@ impl Loadout {
                     .unwrap_or(0xFF) as u8
             }
 
-            let tank_count_preset = if let Some(tank_count) = tanks.get(preset[7] as usize) {
-                *tank_count
-            } else {
-                0
-            };
-
             loadouts.push(Loadout {
                 mwep_ids,
                 mwep_presets,
@@ -331,7 +325,7 @@ impl Loadout {
                 swep_presets,
                 swep_fixeds: fixeds[i][3..6].try_into().unwrap(),
                 tank_count_max: tanks.into_iter().max().unwrap_or(0),
-                tank_count_preset,
+                tank_count_preset: preset[6].wrapping_add(1),
                 weight_type,
                 class_type,
                 profile_description,
