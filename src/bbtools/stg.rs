@@ -1,7 +1,7 @@
 use byteorder::{ByteOrder, LittleEndian, ReadBytesExt, WriteBytesExt};
 use glam::f32::{Vec2, Vec3A as Vec3};
 use glam::{U8Vec4, USizeVec2, Vec4Swizzles};
-use std::cmp;
+
 use std::f32;
 use std::fs;
 use std::path::PathBuf;
@@ -587,7 +587,7 @@ impl GND {
             return Err(std::io::Error::other("BitsPerPixel not 24"));
         }
 
-        let bytes_per_pixel = cmp::max(bits_per_pixel as usize / 8, 1);
+        let bytes_per_pixel = (bits_per_pixel as usize / 8).max(1);
 
         let compression = reader.read_u32::<LittleEndian>()?;
         if compression != 0 {

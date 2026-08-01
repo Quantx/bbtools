@@ -2,7 +2,6 @@ pub mod cockpit;
 pub mod mech;
 pub mod wep;
 
-use std::cmp;
 use std::collections::BTreeMap;
 use std::fs;
 use std::fs::File;
@@ -1735,7 +1734,7 @@ pub fn unpack(
 
             let mut gnd_path = gad_path.clone();
             gnd_path.push(format!("map{:02}.gnd", mi));
-            gad_path.push(format!("map{:02}hit.gad", cmp::min(mi, 24))); // Fix an issue where maps 25/26 need to use map 24's .gad
+            gad_path.push(format!("map{:02}hit.gad", mi.min(24))); // Fix an issue where maps 25/26 need to use map 24's .gad
             let mut mission = Mission::import_loc(
                 mi,
                 &gad_path,

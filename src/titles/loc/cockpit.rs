@@ -1,9 +1,9 @@
+use std::array;
 use std::f32::consts::PI;
 use std::fmt;
 use std::fs::File;
 use std::io::{BufReader, BufWriter, Read, Write};
 use std::path::Path;
-use std::{array, cmp};
 
 use byteorder::{ByteOrder, LittleEndian, ReadBytesExt, WriteBytesExt};
 
@@ -417,7 +417,7 @@ pub struct CockpitLighting {
 
 impl CockpitLighting {
     pub fn add_animation(&mut self, animation: LightingAnimation) {
-        self.point_light_max = cmp::max(self.point_light_max, animation.point_frames.len());
+        self.point_light_max = self.point_light_max.max(animation.point_frames.len());
         self.animations.push(animation);
     }
 
@@ -1445,7 +1445,7 @@ impl OSDraw {
             return None;
         }
 
-        let animation_count = cmp::min(animation_count_raw, 16) as usize;
+        let animation_count = animation_count_raw.min(16) as usize;
 
         return Some((
             Self {

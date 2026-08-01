@@ -1,4 +1,3 @@
-use std::cmp;
 use std::fmt;
 use std::fs;
 use std::fs::File;
@@ -387,14 +386,14 @@ impl XPR {
     pub fn get_pitch(&self) -> usize {
         match self.format {
             XPRFormat::DXT1 => {
-                let block_w = cmp::max(1, (self.width + 3) / 4);
-                let block_h = cmp::max(1, (self.height + 3) / 4);
+                let block_w = ((self.width + 3) / 4).max(1);
+                let block_h = ((self.height + 3) / 4).max(1);
 
                 block_w * block_h * DXT1_SIZE
             }
             XPRFormat::DXT3 => {
-                let block_w = cmp::max(1, (self.width + 3) / 4);
-                let block_h = cmp::max(1, (self.height + 3) / 4);
+                let block_w = ((self.width + 3) / 4).max(1);
+                let block_h = ((self.height + 3) / 4).max(1);
 
                 block_w * block_h * DXT3_SIZE
             }
@@ -680,8 +679,8 @@ impl From<&XPR> for DDS {
                 dds.flags |= 0x80000; // Compressed texture pitch
                 dds.dx10.dxgi_format = 71; // DXGI_FORMAT_BC1_UNORM
 
-                let block_w = cmp::max(1, (xpr.width + 3) / 4);
-                let block_h = cmp::max(1, (xpr.height + 3) / 4);
+                let block_w = ((xpr.width + 3) / 4).max(1);
+                let block_h = ((xpr.height + 3) / 4).max(1);
 
                 dds.pitch = (block_w * block_h * DXT1_SIZE) as u32;
             }
@@ -689,8 +688,8 @@ impl From<&XPR> for DDS {
                 dds.flags |= 0x80000; // Compressed texture pitch
                 dds.dx10.dxgi_format = 74; // DXGI_FORMAT_BC2_UNORM
 
-                let block_w = cmp::max(1, (xpr.width + 3) / 4);
-                let block_h = cmp::max(1, (xpr.height + 3) / 4);
+                let block_w = ((xpr.width + 3) / 4).max(1);
+                let block_h = ((xpr.height + 3) / 4).max(1);
 
                 dds.pitch = (block_w * block_h * DXT3_SIZE) as u32;
             }

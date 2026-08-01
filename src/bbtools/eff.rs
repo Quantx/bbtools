@@ -1,4 +1,3 @@
-use std::cmp;
 use std::fmt;
 use std::fs::File;
 use std::io::BufReader;
@@ -37,7 +36,7 @@ impl EffectRepeat {
     pub fn import_rep(free: [f32; 36], scale: f32, fps: f32) -> Self {
         let spf = 1.0 / fps;
 
-        let repeat_count = cmp::max(free[0] as i32, 1);
+        let repeat_count = (free[0] as i32).max(1);
         assert!(
             repeat_count <= u16::MAX as i32,
             "Repeat Count {}",
@@ -83,7 +82,7 @@ impl EffectRepeat {
     pub fn import_par(free: [f32; 36], scale: f32, fps: f32) -> Self {
         let spf = 1.0 / fps;
 
-        let repeat_count = cmp::max(free[0] as i32, 1);
+        let repeat_count = (free[0] as i32).max(1);
         assert!(
             repeat_count <= u16::MAX as i32,
             "Repeat Count {}",

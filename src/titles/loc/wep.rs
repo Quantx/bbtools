@@ -1,4 +1,3 @@
-use std::cmp;
 use std::ffi::CString;
 use std::fs::File;
 use std::io::BufRead;
@@ -193,7 +192,7 @@ impl WeaponData {
 
         let damage_max = LittleEndian::read_u16(&buf[36..38]);
         let damage_falloff = LittleEndian::read_u16(&buf[54..56]);
-        let damage_min = cmp::max(damage_max as i32 - damage_falloff as i32, 0) as u16;
+        let damage_min = (damage_max as i32 - damage_falloff as i32).max(0) as u16;
 
         let mut damage_range = LittleEndian::read_f32(&buf[24..28]);
         if category == 0 || category == 4 || category == 10 {
@@ -224,7 +223,7 @@ impl WeaponData {
             range_max: LittleEndian::read_f32(&buf[28..32]),
             range_min: LittleEndian::read_f32(&buf[32..36]),
             damage_max: damage_max,
-            rapid_fire: cmp::max(LittleEndian::read_u16(&buf[38..40]), 1),
+            rapid_fire: LittleEndian::read_u16(&buf[38..40]).max(1),
             firing_interval: LittleEndian::read_u16(&buf[40..42]) as f32 * spf,
             reload_interval: LittleEndian::read_u16(&buf[42..44]) as f32 * spf,
             volley_count: volley_count as u8,

@@ -480,16 +480,15 @@ const LOC_OBJ_SIZE: usize = 96;
 pub struct OBJ {
     life: i16,
     pub modcfg: ModelConfig,
-    _attr0: u16,
     position: Vec3,
     rotation: Vec3,
     _alpha_clip: i8,
     _shadow_flag: i8,
-    npc_spawn_idx: u16,
+    spawn_idx: u16,
     team_id: i8,
     ticket_value: i8,
-    _attr1: u16,
     flags: u32,
+    _attr0: u16,
 }
 
 impl From<&[u8; LOC_OBJ_SIZE]> for OBJ {
@@ -497,10 +496,12 @@ impl From<&[u8; LOC_OBJ_SIZE]> for OBJ {
         let zero: [u8; 48] = [0; _];
         assert!(&buf[48..LOC_OBJ_SIZE] == zero);
 
+        assert!(LittleEndian::read_u16(&buf[10..12]) == 0);
+        assert!(LittleEndian::read_u16(&buf[42..44]) == 0);
+
         return OBJ {
             life: LittleEndian::read_i16(&buf[0..2]),
             modcfg: ModelConfig::import_loc_a(&buf[2..10]),
-            _attr0: LittleEndian::read_u16(&buf[10..12]),
             position: Vec3::new(
                 LittleEndian::read_f32(&buf[12..16]),
                 LittleEndian::read_f32(&buf[16..20]),
@@ -513,10 +514,10 @@ impl From<&[u8; LOC_OBJ_SIZE]> for OBJ {
             ),
             _alpha_clip: buf[36] as i8,
             _shadow_flag: buf[37] as i8,
-            npc_spawn_idx: LittleEndian::read_u16(&buf[38..40]),
+            spawn_idx: LittleEndian::read_u16(&buf[38..40]),
             team_id: buf[40] as i8,
             ticket_value: buf[41] as i8,
-            _attr1: LittleEndian::read_u16(&buf[42..44]),
+            _attr0: 0,
             flags: LittleEndian::read_u32(&buf[44..48]),
         };
     }
@@ -530,7 +531,6 @@ impl From<&[u8; SB_OBJ_SIZE]> for OBJ {
         return OBJ {
             life: LittleEndian::read_i16(&buf[0..2]),
             modcfg: ModelConfig::import_sb_a(&buf[2..12]),
-            _attr0: 0,
             position: Vec3::new(
                 LittleEndian::read_f32(&buf[12..16]),
                 LittleEndian::read_f32(&buf[16..20]),
@@ -543,10 +543,10 @@ impl From<&[u8; SB_OBJ_SIZE]> for OBJ {
             ),
             _alpha_clip: buf[37] as i8,
             _shadow_flag: buf[38] as i8,
-            npc_spawn_idx: LittleEndian::read_u16(&buf[38..40]),
+            spawn_idx: LittleEndian::read_u16(&buf[38..40]),
             team_id: buf[40] as i8,
             ticket_value: buf[41] as i8,
-            _attr1: LittleEndian::read_u16(&buf[42..44]),
+            _attr0: LittleEndian::read_u16(&buf[42..44]),
             flags: LittleEndian::read_u32(&buf[40..44]),
         };
     }
@@ -716,7 +716,7 @@ impl OBJ {
 
             writer.write_i8(obj.team_id)?;
             writer.write_i8(obj.ticket_value)?;
-            writer.write_u16::<LittleEndian>(obj.npc_spawn_idx)?;
+            writer.write_u16::<LittleEndian>(obj.spawn_idx)?;
 
             let position = obj.position + offset;
             for v in position.to_array() {

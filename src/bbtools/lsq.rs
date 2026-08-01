@@ -1,4 +1,3 @@
-use std::cmp;
 use std::fmt;
 use std::fs::File;
 use std::io::BufWriter;
@@ -411,10 +410,8 @@ impl LSQ {
         let sounds_animation_count = if sounds_buf[1] > 0 { sounds_buf[0] } else { 0 };
         let flags_animation_count = if flags_buf[1] > 0 { flags_buf[0] } else { 0 };
 
-        let animation_count = cmp::max(
-            effects_animation_count,
-            cmp::max(sounds_animation_count, flags_animation_count),
-        );
+        let animation_count =
+            effects_animation_count.max(sounds_animation_count.max(flags_animation_count));
 
         if effects_buf[1] > 0 {
             assert!(animation_count == effects_buf[0])

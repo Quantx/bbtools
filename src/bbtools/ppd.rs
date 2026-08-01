@@ -1,4 +1,3 @@
-use std::cmp;
 use std::fmt;
 use std::fs::File;
 use std::io::BufWriter;
@@ -32,7 +31,7 @@ impl Surface {
             return Surface(layers, 0xFF);
         }
 
-        let surface = cmp::min(surface_bit.trailing_zeros(), 48) as u8;
+        let surface = surface_bit.trailing_zeros().min(48) as u8;
         assert!(surface < 28, "Invalid surface: {:016X}", surface_bit);
         Surface(layers, surface)
     }

@@ -1,4 +1,3 @@
-use std::cmp;
 use std::io::{Seek, SeekFrom};
 
 use byteorder::{ByteOrder, LittleEndian, ReadBytesExt};
@@ -227,7 +226,7 @@ impl X86Context {
 
     pub fn adjust_stack_pointer(&mut self, offset: i32) {
         self.esp += offset as i32;
-        self.esp_min = cmp::min(self.esp_min, self.esp);
+        self.esp_min = self.esp_min.min(self.esp);
 
         assert!((-self.esp) as usize <= self.stack.len());
 
