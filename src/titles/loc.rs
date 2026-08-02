@@ -1699,6 +1699,22 @@ pub fn unpack(
             build_path.pop();
         }
 
+        // Load CTF data
+        let mut ctf_spawn_0_list: [u32; 28] = [0; _];
+        xbe.seek_section_offset(".data", 0xFE08)?;
+        xbe.reader
+            .read_u32_into::<LittleEndian>(&mut ctf_spawn_0_list)?;
+
+        let mut ctf_spawn_1_list: [u32; 28] = [0; _];
+        xbe.seek_section_offset(".data", 0xFE78)?;
+        xbe.reader
+            .read_u32_into::<LittleEndian>(&mut ctf_spawn_1_list)?;
+
+        let mut ctf_spawns_team_list: [u32; GAME_MISSION_COUNT * 12] = [0; _];
+        xbe.seek_section_offset(".data", 0xFEE8)?;
+        xbe.reader
+            .read_u32_into::<LittleEndian>(&mut ctf_spawns_team_list)?;
+
         let mut gad_path = game_path.clone();
         gad_path.push("BumpData");
 
@@ -1749,6 +1765,16 @@ pub fn unpack(
                 GAME_FPS,
             )?;
             gad_path.pop();
+
+            mission.ctf_spawn_0 = ctf_spawn_0_list[mi] as u8;
+            mission.ctf_spawn_1 = ctf_spawn_1_list[mi] as u8;
+            for (mission_ctf_team, ctf_team) in mission
+                .ctf_spawns_team
+                .iter_mut()
+                .zip(&ctf_spawns_team_list[mi * 12..mi * 12 + 12])
+            {
+                *mission_ctf_team = *ctf_team as u8;
+            }
 
             OBJ::apply_heightmap(&mut objects, &mission, 0x1);
 

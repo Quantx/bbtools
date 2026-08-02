@@ -11,6 +11,7 @@ use std::{
     path::Path,
 };
 
+use crate::bbtools::xbe::XBE;
 use crate::bbtools::*;
 use obj::OBJ;
 use ppd::Surface;
@@ -870,6 +871,9 @@ pub struct Mission {
     pub ground: Option<GND>,
     pub stages: Vec<STG>,
     text: MissionText,
+    pub ctf_spawn_0: u8,
+    pub ctf_spawn_1: u8,
+    pub ctf_spawns_team: [u8; 12],
 }
 
 impl Mission {
@@ -949,6 +953,9 @@ impl Mission {
             ground,
             stages,
             text: MissionText::new_loc(id),
+            ctf_spawn_0: 0xFF,
+            ctf_spawn_1: 0xFF,
+            ctf_spawns_team: [0xFF; _],
         });
     }
 
@@ -986,6 +993,9 @@ impl Mission {
             ground: Some(ground),
             stages: vec![stage],
             text: MissionText::new_sb(id),
+            ctf_spawn_0: 0xFF,
+            ctf_spawn_1: 0xFF,
+            ctf_spawns_team: [0xFF; _],
         });
     }
 
@@ -1051,6 +1061,12 @@ impl Mission {
 
             write_godot_path(&dds_paths[0], &mut writer)?; // Object DDS
             OBJ::write_objects(objects, self.offset, model_path_fn, &mut writer)?;
+
+            writer.write_u8(self.ctf_spawn_0)?;
+            writer.write_u8(self.ctf_spawn_1)?;
+            for team in self.ctf_spawns_team {
+                writer.write_u8(team)?;
+            }
 
             let start_pos = fstg.start_pos + self.offset;
             for v in start_pos.to_array() {
