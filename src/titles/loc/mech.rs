@@ -11,6 +11,7 @@ use std::path::Path;
 
 use byteorder::{ByteOrder, LittleEndian, ReadBytesExt, WriteBytesExt};
 
+use glam::Vec3Swizzles;
 use glam::f32::Vec2;
 use glam::f32::Vec3A as Vec3; // Vec3A is 16-bytes so that it can function with SIMD
 
@@ -360,11 +361,14 @@ impl MechParts {
             let manipulator = xbe.reader.read_u32::<LittleEndian>()?;
             assert!(manipulator <= u8::MAX as u32);
 
+            // The Y and Z components are switched here for some reason
             let collider_size = Vec3::new(
                 xbe.reader.read_f32::<LittleEndian>()?,
                 xbe.reader.read_f32::<LittleEndian>()?,
                 xbe.reader.read_f32::<LittleEndian>()?,
-            ) * scale;
+            )
+            .xzy()
+                * scale;
 
             let weapon_mount = xbe.reader.read_u32::<LittleEndian>()?;
             assert!(weapon_mount <= u8::MAX as u32);
@@ -374,7 +378,7 @@ impl MechParts {
 
             mech_parts.push(MechParts {
                 id: id as u8,
-                collider_size: collider_size,
+                collider_size,
                 collider_offset: Vec3::new(0.0, collider_size.y * 0.5, collider_offset_z),
                 manipulator: manipulator as u8,
                 weapon_mount: weapon_mount as u8,

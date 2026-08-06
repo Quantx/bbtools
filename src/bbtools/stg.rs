@@ -11,7 +11,6 @@ use std::{
     path::Path,
 };
 
-use crate::bbtools::xbe::XBE;
 use crate::bbtools::*;
 use obj::OBJ;
 use ppd::Surface;
