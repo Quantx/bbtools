@@ -1136,6 +1136,11 @@ pub fn unpack(
             let mut xpr = XPR::open(&game_path)?;
             game_path.pop();
 
+            // Convert from signed to unsigned texture
+            for val in xpr.data.iter_mut() {
+                *val = val.wrapping_sub(0x80);
+            }
+
             xpr.convert_gb_to_gb_lin()?;
 
             println!("Importing Water Bump XRAW {:02}: {}", i, xpr);
@@ -1949,6 +1954,7 @@ pub fn unpack(
                     lmt.set_loop_mode(2, LoopMode::Linear)?; // Run
                     lmt.set_loop_mode(3, LoopMode::Linear)?; // Wheel
                     lmt.set_loop_mode(4, LoopMode::Linear)?; // Reverse
+                    lmt.set_loop_mode(5, LoopMode::Linear)?; // Turning
                 }
 
                 // Export GLBIN

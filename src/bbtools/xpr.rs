@@ -233,7 +233,7 @@ pub struct XPR {
     pub depth: usize,  // Z
     pub layers: usize, // ArraySize
 
-    data: Vec<u8>,
+    pub data: Vec<u8>,
 
     dds_path: Option<PathBuf>,
 }
