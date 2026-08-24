@@ -189,6 +189,7 @@ impl EngineData {
             reader.read(&mut file_buf)?;
 
             let mut engine_data = EngineData::from(&file_buf);
+            engine_data.rpm_rate *= fps;
             engine_data.turn_speed *= fps;
 
             engine_data_list.push(engine_data);
