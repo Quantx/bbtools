@@ -1838,6 +1838,11 @@ pub fn unpack(
                     xpr.to_string()
                 );
 
+                if file_index >= 145 && file_index <= 156 {
+                    // Flatten cockpit display textures
+                    xpr.flatten();
+                }
+
                 match xpr.format {
                     XPRFormat::ARGB => {
                         xpr.convert_argb_to_argb_lin()?;

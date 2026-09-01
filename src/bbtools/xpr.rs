@@ -426,6 +426,22 @@ impl XPR {
         self.height /= 2;
     }
 
+    pub fn flatten(&mut self) {
+        if self.levels > 1 {
+            return;
+        }
+
+        if self.depth <= 1 && self.layers <= 1 {
+            return;
+        }
+
+        let pitch = self.get_pitch();
+
+        drop(self.data.drain(pitch..));
+        self.depth = 1;
+        self.layers = 1;
+    }
+
     pub fn discard_mipmaps(&mut self) {
         if self.levels <= 1 {
             return;
