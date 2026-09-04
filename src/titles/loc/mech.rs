@@ -588,9 +588,11 @@ impl Mech {
             write_pascal_string(&format!("loc:{:04}", self.name_text), &mut writer)?;
             write_pascal_string(&format!("loc:{:04}", self.description_text), &mut writer)?;
 
+            let generation = self.data.get_generation();
+
             // Mech Info
             writer.write_u8(self.data.cockpit_type)?;
-            writer.write_u8(self.data.get_generation())?;
+            writer.write_u8(generation)?;
             writer.write_u8(self.manufacturer)?;
             writer.write_u8(self.faction_flags)?;
             writer.write_u8(self.loadout.weight_type)?;
@@ -649,6 +651,9 @@ impl Mech {
             // Loadout
             writer.write_f32::<LittleEndian>(self.data.tank_capacity_main)?;
             writer.write_f32::<LittleEndian>(self.data.tank_capacity_sub)?;
+
+            let chaff = if generation == 2 { 20 } else { 10 };
+            writer.write_u16::<LittleEndian>(chaff)?;
 
             writer.write_u8(self.data.loadout_weight_max)?;
             writer.write_u8(self.data.loadout_weight_standard)?;

@@ -1597,7 +1597,7 @@ pub fn unpack(
                     let hud_lines = Line::import_linesdefs(
                         xbe,
                         ".data",
-                        0x2D5F0 + 8 * (c * HUD_LINESDEFS_COUNT) as u32,
+                        0x2D5F0 + (8 * HUD_LINESDEFS_COUNT * c) as u32,
                         HUD_LINESDEFS_COUNT,
                     )?;
 
